@@ -1,0 +1,183 @@
+:root {
+  --bg-color: #222;
+  --card-bg-color: #fdfdfd;
+  --text-color: #333;
+  --border-color: #dcdfe6;
+  --grey-text: #888;
+  --highlight-bg: #efefef;
+  --green-highlight-bg: #f0f9eb;
+  --yellow-highlight-bg: #fef7e9;
+  --yellow-highlight-border: #fce1b3;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+a {
+  color: var(--grey-text);
+  text-decoration: none;
+}
+
+.calc-container {
+  background-color: var(--card-bg-color);
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 600px;
+  touch-action: manipulation;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+header p {
+  margin: 0.5rem 0.5rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.275rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+label {
+  flex-basis: 60%;
+  padding-right: 1rem;
+  font-size: 1rem;
+}
+
+input,
+output {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: right;
+  flex-basis: 40%;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+input[type="number"] {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  border-color: #409eff;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.input-highlight {
+  background-color: var(--highlight-bg);
+}
+
+.input-highlight-green {
+  background-color: var(--green-highlight-bg);
+}
+
+label,
+input,
+.form-row.display-row,
+.form-row.display-row span {
+  font-weight: 700;
+}
+
+.primary-input-row label,
+.primary-input-row input {
+  color: var(--text-color);
+}
+
+.form-row.display-row span#takeProfitPrice {
+  color: green;
+}
+
+.form-row.display-row output#takeProfitPrice {
+  color: green;
+}
+
+.form-row.display-row span#stopLossPrice,
+.form-row.display-row output#stopLossPrice {
+  color: red;
+}
+
+.padded-top {
+  padding-top: 0.5rem;
+}
+
+.reset-button {
+  display: block;
+  margin: 0.25rem auto;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--text-color);
+  background-color: var(--card-bg-color);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1rem 0;
+}
+
+footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--grey-text);
+  line-height: 1.6;
+  text-align: center;
+}
+
+footer p {
+  margin: 0 0.5rem 0 0.5rem;
+  font-size: 0.725rem;
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+}

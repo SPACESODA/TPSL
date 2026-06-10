@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Take-Profit / Stop-Loss Calculator</title>
+    <meta name="theme-color" content="#222222">
+    <meta name="application-name" content="TPSL">
+    <meta name="apple-mobile-web-app-title" content="TPSL">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="calc-container">
+      <header>
+        <h1>Take-Profit / Stop-Loss Calculator</h1>
+        <p>Enter your order price and the desired take-profit and stop-loss percentages.</p>
+      </header>
+
+      <form class="form-grid" id="calculatorForm">
+        <div class="form-row input-row primary-input-row">
+          <label for="unitPrice">Order Price</label>
+          <input type="number" id="unitPrice" class="input-highlight-green" value="100" step="0.5" min="0" tabindex="1" inputmode="decimal" autocomplete="off" autofocus>
+        </div>
+        <div class="form-row input-row primary-input-row">
+          <label for="stopLossPercent">Stop-Loss %</label>
+          <input type="number" id="stopLossPercent" class="input-highlight" value="2.5" min="0" step="0.5" tabindex="-1" inputmode="numeric" autocomplete="off">
+        </div>
+        <div class="form-row input-row primary-input-row">
+          <label for="takeProfitPercent">Take-Profit %</label>
+          <input type="number" id="takeProfitPercent" class="input-highlight" value="8" min="0" step="0.5" tabindex="-1" inputmode="numeric" autocomplete="off">
+        </div>
+
+        <div class="form-row display-row padded-top">
+          <label>Stop-Loss Price</label>
+          <output id="stopLossPrice"></output>
+        </div>
+        <div class="form-row display-row">
+          <label>Take-Profit Price</label>
+          <output id="takeProfitPrice"></output>
+        </div>
+
+      </form>
+
+      <button class="reset-button" type="button" id="resetButton" tabindex="-1" aria-label="Reset calculator">RESET</button>
+
+      <footer>
+        <p>By &copy; <a href="https://x.com/anthonycxc" target="_blank" rel="noopener noreferrer" tabindex="-1">Anthony C.</a></p>
+      </footer>
+    </main>
+  </body>
+</html>
