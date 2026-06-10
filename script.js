@@ -5,10 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return Number.isFinite(n) ? n : 0;
   };
 
+  const clampMin = (value, min = 0) => Math.max(min, value);
+
   const round = (x, dp = 2) => {
     const m = Math.pow(10, dp);
     return Math.round((x + Number.EPSILON) * m) / m;
   };
+
+  const formatPrice = (value) =>
+    new Intl.NumberFormat("en", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 0
+    }).format(value);
 
   // ---- Elements ----
   const inputs = {
@@ -36,15 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Core calculation ----
   function calculate() {
-    const tpPct = toNum(inputs.takeProfitPercent.value);
-    const slPct = toNum(inputs.stopLossPercent.value);
-    const unitPrice = toNum(inputs.unitPrice.value);
+    const tpPct = clampMin(toNum(inputs.takeProfitPercent.value));
+    const slPct = clampMin(toNum(inputs.stopLossPercent.value));
+    const unitPrice = clampMin(toNum(inputs.unitPrice.value));
 
     const takeProfitPrice = round(unitPrice * (1 + tpPct / 100), 2);
-    const stopLossPrice = round(unitPrice * (1 - slPct / 100), 2);
+    const stopLossPrice = clampMin(round(unitPrice * (1 - slPct / 100), 2));
 
-    outputs.takeProfitPrice.textContent = takeProfitPrice;
-    outputs.stopLossPrice.textContent = stopLossPrice;
+    outputs.takeProfitPrice.textContent = formatPrice(takeProfitPrice);
+    outputs.stopLossPrice.textContent = formatPrice(stopLossPrice);
   }
 
   // ---- Wire up events ----
@@ -87,7 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
     inputs.unitPrice.focus();
   }, 1000);
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
+  const canUseServiceWorker =
+    "serviceWorker" in navigator &&
+    window.isSecureContext &&
+    ["http:", "https:"].includes(window.location.protocol);
+
+  if (canUseServiceWorker) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {
+      // The calculator still works without offline caching.
+    });
   }
 });

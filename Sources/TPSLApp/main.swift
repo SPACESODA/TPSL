@@ -6,6 +6,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
   private var popover: NSPopover?
   private var webView: WKWebView?
 
+  private lazy var statusMenu: NSMenu = {
+    let menu = NSMenu()
+    let openItem = NSMenuItem(title: "Open TPSL", action: #selector(openFromMenu(_:)), keyEquivalent: "")
+    openItem.target = self
+    menu.addItem(openItem)
+    menu.addItem(.separator())
+
+    let quitItem = NSMenuItem(title: "Quit TPSL", action: #selector(quit(_:)), keyEquivalent: "q")
+    quitItem.target = self
+    menu.addItem(quitItem)
+    return menu
+  }()
+
   func applicationDidFinishLaunching(_ notification: Notification) {
     NSApp.setActivationPolicy(.accessory)
 
@@ -37,12 +50,36 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
       button.imagePosition = .imageOnly
       button.toolTip = "TPSL"
       button.target = self
-      button.action = #selector(togglePopover(_:))
+      button.action = #selector(statusItemClicked(_:))
+      button.sendAction(on: [.leftMouseUp, .rightMouseUp])
     }
   }
 
   func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     false
+  }
+
+  @objc private func quit(_ sender: Any?) {
+    NSApp.terminate(nil)
+  }
+
+  @objc private func openFromMenu(_ sender: Any?) {
+    guard let button = statusItem?.button else { return }
+    togglePopover(button)
+  }
+
+  @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
+    guard let event = NSApp.currentEvent else {
+      togglePopover(sender)
+      return
+    }
+
+    switch event.type {
+    case .rightMouseUp, .rightMouseDown:
+      statusMenu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.height), in: sender)
+    default:
+      togglePopover(sender)
+    }
   }
 
   func webView(

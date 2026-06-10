@@ -2,18 +2,29 @@
   "name": "Take-Profit / Stop-Loss Calculator",
   "short_name": "TPSL",
   "description": "A fast take-profit and stop-loss calculator.",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#222222",
   "theme_color": "#222222",
   "orientation": "portrait",
+  "lang": "en",
+  "categories": ["finance", "productivity", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-192.png",

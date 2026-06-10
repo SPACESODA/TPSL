@@ -12,6 +12,14 @@ CONTENTS_DIR="$APP_BUNDLE/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
 RESOURCES_DIR="$CONTENTS_DIR/Resources"
 WEBAPP_DIR="$RESOURCES_DIR/WebApp"
+BUILD_DIR="$ROOT_DIR/.build"
+SWIFTPM_CACHE_DIR="$BUILD_DIR/swiftpm-cache"
+CLANG_MODULE_CACHE_DIR="$BUILD_DIR/clang-module-cache"
+PRESERVED_ICON="$DIST_DIR/AppIcon.icns"
+
+mkdir -p "$SWIFTPM_CACHE_DIR" "$CLANG_MODULE_CACHE_DIR"
+export SWIFTPM_CACHE_PATH="$SWIFTPM_CACHE_DIR"
+export CLANG_MODULE_CACHE_PATH="$CLANG_MODULE_CACHE_DIR"
 
 case "$MODE" in
   run|--debug|debug|--logs|logs|--telemetry|telemetry|--verify|verify) ;;
@@ -20,7 +28,16 @@ esac
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
-swift build -c release --product "$PRODUCT_NAME" --package-path "$ROOT_DIR"
+if [[ -f "$RESOURCES_DIR/AppIcon.icns" ]]; then
+  cp "$RESOURCES_DIR/AppIcon.icns" "$PRESERVED_ICON"
+fi
+
+swift build \
+  -c release \
+  --product "$PRODUCT_NAME" \
+  --package-path "$ROOT_DIR" \
+  --scratch-path "$BUILD_DIR" \
+  --disable-sandbox
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$MACOS_DIR" "$WEBAPP_DIR"
@@ -33,25 +50,19 @@ cp "$ROOT_DIR/script.js" "$WEBAPP_DIR/"
 cp "$ROOT_DIR/sw.js" "$WEBAPP_DIR/"
 cp "$ROOT_DIR/manifest.webmanifest" "$WEBAPP_DIR/"
 cp "$ROOT_DIR/icon.svg" "$WEBAPP_DIR/"
+cp "$ROOT_DIR/icon-180.png" "$WEBAPP_DIR/"
 cp "$ROOT_DIR/icon-192.png" "$WEBAPP_DIR/"
 cp "$ROOT_DIR/icon-512.png" "$WEBAPP_DIR/"
 
-if command -v sips >/dev/null 2>&1 && command -v iconutil >/dev/null 2>&1; then
-  ICONSET="$DIST_DIR/AppIcon.iconset"
-  rm -rf "$ICONSET"
-  mkdir -p "$ICONSET"
-  sips -z 16 16 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_16x16.png" >/dev/null
-  sips -z 32 32 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_16x16@2x.png" >/dev/null
-  sips -z 32 32 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_32x32.png" >/dev/null
-  sips -z 64 64 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_32x32@2x.png" >/dev/null
-  sips -z 128 128 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_128x128.png" >/dev/null
-  sips -z 256 256 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_128x128@2x.png" >/dev/null
-  sips -z 256 256 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_256x256.png" >/dev/null
-  sips -z 512 512 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_256x256@2x.png" >/dev/null
-  sips -z 512 512 "$ROOT_DIR/icon-512.png" --out "$ICONSET/icon_512x512.png" >/dev/null
-  cp "$ROOT_DIR/icon-512.png" "$ICONSET/icon_512x512@2x.png"
-  iconutil -c icns "$ICONSET" -o "$RESOURCES_DIR/AppIcon.icns"
-  rm -rf "$ICONSET"
+if [[ -f "$PRESERVED_ICON" ]]; then
+  cp "$PRESERVED_ICON" "$RESOURCES_DIR/AppIcon.icns"
+  rm -f "$PRESERVED_ICON"
+fi
+
+APP_ICON_PLIST=""
+if [[ -f "$RESOURCES_DIR/AppIcon.icns" ]]; then
+  APP_ICON_PLIST="  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>"
 fi
 
 cat > "$CONTENTS_DIR/Info.plist" <<PLIST
@@ -63,8 +74,7 @@ cat > "$CONTENTS_DIR/Info.plist" <<PLIST
   <string>en</string>
   <key>CFBundleExecutable</key>
   <string>$APP_NAME</string>
-  <key>CFBundleIconFile</key>
-  <string>AppIcon</string>
+$APP_ICON_PLIST
   <key>CFBundleIdentifier</key>
   <string>$BUNDLE_ID</string>
   <key>CFBundleInfoDictionaryVersion</key>

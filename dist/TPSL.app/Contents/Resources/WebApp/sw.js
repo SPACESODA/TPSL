@@ -1,4 +1,4 @@
-const CACHE_NAME = "tpsl-app-v2";
+const CACHE_NAME = "tpsl-app-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./script.js",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png"
 ];

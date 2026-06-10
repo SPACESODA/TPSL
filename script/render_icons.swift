@@ -78,3 +78,4 @@ func writePNG(_ image: CGImage, to url: URL) throws {
 
 try writePNG(drawIcon(size: 192), to: root.appendingPathComponent("icon-192.png"))
 try writePNG(drawIcon(size: 512), to: root.appendingPathComponent("icon-512.png"))
+try writePNG(drawIcon(size: 180), to: root.appendingPathComponent("icon-180.png"))
