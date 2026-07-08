@@ -33,7 +33,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
     let contentController = NSViewController()
     contentController.view = webView
-    contentController.preferredContentSize = NSSize(width: 420, height: 520)
+    contentController.preferredContentSize = NSSize(width: 440, height: 570)
 
     let popover = NSPopover()
     popover.behavior = .transient

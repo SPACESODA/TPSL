@@ -4,8 +4,12 @@
   --text-color: #333;
   --border-color: #dcdfe6;
   --grey-text: #888;
+  --reset-bg: #6b7280;
+  --reset-bg-hover: #4b5563;
   --highlight-bg: #efefef;
   --green-highlight-bg: #f0f9eb;
+  --quick-option-bg: #f7f7f8;
+  --quick-option-selected-bg: #333;
   --yellow-highlight-bg: #fef7e9;
   --yellow-highlight-border: #fce1b3;
 }
@@ -71,6 +75,46 @@ h1 {
   border: 1px solid transparent;
 }
 
+.quick-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  align-items: center;
+  padding: 0.275rem;
+}
+
+.quick-option-buttons {
+  display: grid;
+  grid-column: 2;
+  grid-template-columns: repeat(4, minmax(3rem, 1fr));
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.quick-option-button {
+  min-height: 2rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-color);
+  background-color: var(--quick-option-bg);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.quick-option-button:focus-visible,
+.reset-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.28);
+}
+
+.quick-option-button.is-selected {
+  border-color: var(--quick-option-selected-bg);
+  color: #fff;
+  background-color: var(--quick-option-selected-bg);
+}
+
 label {
   flex-basis: 60%;
   padding-right: 1rem;
@@ -101,6 +145,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 input[type="number"]:focus {
@@ -147,13 +192,18 @@ input,
 
 .reset-button {
   display: block;
-  margin: 0.25rem auto;
+  margin: 1rem auto 0.25rem;
   padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--reset-bg);
   border-radius: 6px;
   font-size: 0.8rem;
-  color: var(--text-color);
-  background-color: var(--card-bg-color);
+  color: #fff;
+  background-color: var(--reset-bg);
+}
+
+.reset-button:hover {
+  border-color: var(--reset-bg-hover);
+  background-color: var(--reset-bg-hover);
 }
 
 .divider {
@@ -179,5 +229,48 @@ footer p {
 @media (max-width: 480px) {
   h1 {
     font-size: 1.3rem;
+  }
+
+  body {
+    padding: 1rem;
+  }
+
+  .calc-container {
+    padding: 1.5rem 0.875rem;
+  }
+
+  .quick-options {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-option-buttons {
+    grid-column: 1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 340px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .form-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  label,
+  input,
+  output {
+    flex-basis: auto;
+  }
+
+  label {
+    padding-right: 0;
+  }
+
+  .quick-option-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

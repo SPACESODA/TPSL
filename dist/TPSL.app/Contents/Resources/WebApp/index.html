@@ -22,30 +22,38 @@
     <main class="calc-container">
       <header>
         <h1>Take-Profit / Stop-Loss Calculator</h1>
-        <p>Enter your order price and the desired take-profit and stop-loss percentages.</p>
+        <p>Enter your entry price and target percentages.</p>
       </header>
 
       <form class="form-grid" id="calculatorForm">
         <div class="form-row input-row primary-input-row">
-          <label for="unitPrice">Order Price</label>
+          <label for="unitPrice">Entry Price</label>
           <input type="number" id="unitPrice" class="input-highlight-green" value="100" step="0.5" min="0" tabindex="1" inputmode="decimal" autocomplete="off" autofocus>
         </div>
         <div class="form-row input-row primary-input-row">
           <label for="stopLossPercent">Stop-Loss %</label>
-          <input type="number" id="stopLossPercent" class="input-highlight" value="2.5" min="0" step="0.5" tabindex="-1" inputmode="numeric" autocomplete="off">
+          <input type="number" id="stopLossPercent" class="input-highlight" value="2.5" min="0" step="0.5" tabindex="-1" inputmode="decimal" autocomplete="off">
+        </div>
+        <div class="quick-options" aria-label="Common stop-loss percentages">
+          <div class="quick-option-buttons">
+            <button type="button" class="quick-option-button" data-stop-loss="2" aria-pressed="false">2%</button>
+            <button type="button" class="quick-option-button" data-stop-loss="2.5" aria-pressed="true">2.5%</button>
+            <button type="button" class="quick-option-button" data-stop-loss="5" aria-pressed="false">5%</button>
+            <button type="button" class="quick-option-button" data-stop-loss="8" aria-pressed="false">8%</button>
+          </div>
         </div>
         <div class="form-row input-row primary-input-row">
           <label for="takeProfitPercent">Take-Profit %</label>
-          <input type="number" id="takeProfitPercent" class="input-highlight" value="8" min="0" step="0.5" tabindex="-1" inputmode="numeric" autocomplete="off">
+          <input type="number" id="takeProfitPercent" class="input-highlight" value="8" min="0" step="0.5" tabindex="-1" inputmode="decimal" autocomplete="off">
         </div>
 
         <div class="form-row display-row padded-top">
           <label>Stop-Loss Price</label>
-          <output id="stopLossPrice"></output>
+          <output id="stopLossPrice" aria-live="polite"></output>
         </div>
         <div class="form-row display-row">
           <label>Take-Profit Price</label>
-          <output id="takeProfitPrice"></output>
+          <output id="takeProfitPrice" aria-live="polite"></output>
         </div>
 
       </form>
@@ -53,7 +61,7 @@
       <button class="reset-button" type="button" id="resetButton" tabindex="-1" aria-label="Reset calculator">RESET</button>
 
       <footer>
-        <p>By &copy; <a href="https://x.com/anthonycxc" target="_blank" rel="noopener noreferrer" tabindex="-1">Anthony C.</a></p>
+        <p>By &copy; <a href="https://x.com/anthonycxc" target="_blank" rel="noopener noreferrer" tabindex="-1">Anthony C.</a> | On <a href="https://github.com/SPACESODA/TPSL" target="_blank" rel="noopener noreferrer" tabindex="-1">Github</a></p>
       </footer>
     </main>
   </body>

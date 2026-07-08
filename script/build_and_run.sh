@@ -4,10 +4,14 @@ set -euo pipefail
 APP_NAME="TPSL"
 PRODUCT_NAME="TPSL"
 BUNDLE_ID="com.realanthonyc.tpsl"
+APP_VERSION="1.1"
+BUILD_NUMBER="2"
 MODE="${1:-run}"
+INSTALL_DIR="${2:-/Applications}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
 APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
+INSTALL_APP_BUNDLE="$INSTALL_DIR/$APP_NAME.app"
 CONTENTS_DIR="$APP_BUNDLE/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
 RESOURCES_DIR="$CONTENTS_DIR/Resources"
@@ -22,11 +26,42 @@ export SWIFTPM_CACHE_PATH="$SWIFTPM_CACHE_DIR"
 export CLANG_MODULE_CACHE_PATH="$CLANG_MODULE_CACHE_DIR"
 
 case "$MODE" in
-  run|--debug|debug|--logs|logs|--telemetry|telemetry|--verify|verify) ;;
-  *) echo "usage: $0 [run|--debug|--logs|--telemetry|--verify]" >&2; exit 2 ;;
+  run|--debug|debug|--install|install|--logs|logs|--telemetry|telemetry|--verify|verify) ;;
+  *) echo "usage: $0 [run|--install [install-dir]|--debug|--logs|--telemetry|--verify]" >&2; exit 2 ;;
 esac
 
+for required_command in swift cp chmod mkdir rm; do
+  if ! command -v "$required_command" >/dev/null 2>&1; then
+    echo "Missing required command: $required_command" >&2
+    exit 1
+  fi
+done
+
+if [[ "$MODE" == "--install" || "$MODE" == "install" ]]; then
+  if ! command -v /usr/bin/ditto >/dev/null 2>&1; then
+    echo "Missing required command: /usr/bin/ditto" >&2
+    exit 1
+  fi
+fi
+
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+
+for required_file in \
+  index.html \
+  style.css \
+  script.js \
+  sw.js \
+  manifest.webmanifest \
+  icon.svg \
+  icon-180.png \
+  icon-192.png \
+  icon-512.png
+do
+  if [[ ! -f "$ROOT_DIR/$required_file" ]]; then
+    echo "Missing required web asset: $ROOT_DIR/$required_file" >&2
+    exit 1
+  fi
+done
 
 if [[ -f "$RESOURCES_DIR/AppIcon.icns" ]]; then
   cp "$RESOURCES_DIR/AppIcon.icns" "$PRESERVED_ICON"
@@ -84,9 +119,9 @@ $APP_ICON_PLIST
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0</string>
+  <string>$APP_VERSION</string>
   <key>CFBundleVersion</key>
-  <string>1</string>
+  <string>$BUILD_NUMBER</string>
   <key>LSMinimumSystemVersion</key>
   <string>13.0</string>
   <key>LSUIElement</key>
@@ -103,6 +138,22 @@ open_app() {
   /usr/bin/open -n "$APP_BUNDLE"
 }
 
+install_app() {
+  case "$INSTALL_APP_BUNDLE" in
+    */"$APP_NAME.app") ;;
+    *) echo "Refusing to install to unexpected path: $INSTALL_APP_BUNDLE" >&2; exit 1 ;;
+  esac
+
+  mkdir -p "$INSTALL_DIR"
+  rm -rf "$INSTALL_APP_BUNDLE"
+  /usr/bin/ditto "$APP_BUNDLE" "$INSTALL_APP_BUNDLE"
+  if [[ ! -x "$INSTALL_APP_BUNDLE/Contents/MacOS/$APP_NAME" ]]; then
+    echo "Installed app is incomplete: $INSTALL_APP_BUNDLE" >&2
+    exit 1
+  fi
+  echo "Installed $INSTALL_APP_BUNDLE"
+}
+
 case "$MODE" in
   run)
     open_app
@@ -114,6 +165,11 @@ case "$MODE" in
   --logs|logs)
     open_app
     /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\""
+    ;;
+  --install|install)
+    install_app
+    /usr/bin/open -n "$INSTALL_APP_BUNDLE"
+    echo "Launched $INSTALL_APP_BUNDLE"
     ;;
   --telemetry|telemetry)
     open_app
