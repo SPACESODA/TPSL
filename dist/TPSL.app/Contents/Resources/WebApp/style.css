@@ -23,6 +23,7 @@ body {
   align-items: flex-start;
   padding: 1rem;
   min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
   margin: 0;
 }
@@ -232,11 +233,12 @@ footer p {
   }
 
   body {
-    padding: 1rem;
+    min-height: auto;
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.75rem, env(safe-area-inset-bottom));
   }
 
   .calc-container {
-    padding: 1.5rem 0.875rem;
+    padding: 1.25rem 0.875rem;
   }
 
   .quick-options {
